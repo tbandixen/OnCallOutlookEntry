@@ -136,12 +136,14 @@ namespace OnCallOutlookEntry
 
             Console.WriteLine($"Found {appointments.Count} Appointments on your calendar from {firstDate.Value.ToShortDateString()} to {lastDate.Value.ToShortDateString()} are:");
 
+            Console.WriteLine("Deleting old entries:");
             foreach (var appointment in appointments)
             {
                 appointment.Delete(DeleteMode.MoveToDeletedItems);
-                Console.WriteLine($"Deleted old entry from {appointment.Start.ToShortDateString()} to {appointment.End.ToShortDateString()}");
+                Console.WriteLine($"\t{appointment.Start.ToShortDateString()} - {appointment.End.ToShortDateString()}");
             }
 
+            Console.WriteLine("Saving new entries:");
             // save new entries
             foreach (var kvp in list)
             {
@@ -154,7 +156,7 @@ namespace OnCallOutlookEntry
                 appointment.IsReminderSet = false;
                 appointment.Categories.Add("AMS");
                 appointment.Save(SendInvitationsMode.SendToNone);
-                Console.WriteLine($"Saved new entry from {appointment.Start.ToShortDateString()} to {appointment.End.ToShortDateString()}");
+                Console.WriteLine($"\t{appointment.Start.ToShortDateString()} - {appointment.End.ToShortDateString()}");
             }
 
             Console.WriteLine("Finished");
