@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.Exchange.WebServices.Data;
 using OfficeOpenXml;
