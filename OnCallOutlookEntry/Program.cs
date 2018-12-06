@@ -23,16 +23,16 @@ namespace OnCallOutlookEntry
             {
                 PrintUsage();
                 //throw new ArgumentException("See usage", nameof(args));
-                Console.WriteLine("Path to xlsm:");
+                Console.Write("Path to xlsm: ");
                 filepath = Console.ReadLine();
 
-                Console.WriteLine("Your Name:");
+                Console.Write("Your Name: ");
                 name = Console.ReadLine();
 
-                Console.WriteLine("Your email:");
+                Console.Write("Your email: ");
                 email = Console.ReadLine();
 
-                Console.WriteLine("AD password:");
+                Console.Write("AD password: ");
                 password = ReadPassword();
             }
             else
@@ -43,10 +43,13 @@ namespace OnCallOutlookEntry
                 password = args[3].Aggregate(new SecureString(), (ss, c) => { ss.AppendChar(c); return ss; });
                 password.MakeReadOnly();
             }
+
             if (!File.Exists(filepath))
             {
                 throw new FileNotFoundException("The file can not be found.", filepath);
             }
+
+            Console.WriteLine();
 
             string amsName;
             var list = new Dictionary<DateTime, DateTime>();
@@ -196,6 +199,7 @@ namespace OnCallOutlookEntry
             Console.WriteLine("\t- The name is used to filter the entries");
             Console.WriteLine("\t- The email is used to create new appointments on the exchange server");
             Console.WriteLine("\t- The password is used to authenticate against the exchange server (it wil NOT be logged or saved anywhere)");
+            Console.WriteLine();
         }
     }
 }
