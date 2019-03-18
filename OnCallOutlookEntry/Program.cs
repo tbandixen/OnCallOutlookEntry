@@ -22,7 +22,6 @@ namespace OnCallOutlookEntry
             if (!args.Any() || args.Length < 4)
             {
                 PrintUsage();
-                //throw new ArgumentException("See usage", nameof(args));
                 Console.Write("Path to xlsm: ");
                 filepath = Console.ReadLine();
 
@@ -118,8 +117,8 @@ namespace OnCallOutlookEntry
             {
                 Url = new Uri(serverAddress),
                 Credentials = new NetworkCredential(email, password, "tvdit.onmicrosoft.com"),
+                PreAuthenticate = true
             };
-
 
             // delete old entries
             // Initialize the calendar folder object with only the folder ID. 
@@ -136,31 +135,36 @@ namespace OnCallOutlookEntry
 
             Console.WriteLine($"Found {appointments.Count} Appointments on your calendar from {firstDate.Value.ToShortDateString()} to {lastDate.Value.ToShortDateString()} are:");
 
-            Console.WriteLine("Deleting old entries:");
-            foreach (var appointment in appointments)
+            await System.Threading.Tasks.Task.Run(() =>
             {
-                appointment.Delete(DeleteMode.MoveToDeletedItems);
-                Console.WriteLine($"\t{appointment.Start.ToShortDateString()} - {appointment.End.ToShortDateString()}");
-            }
+                Console.WriteLine($"Deleting {appointments.Count} old entries");
+                Parallel.ForEach(appointments, appointment =>
+                {
+                    appointment.Delete(DeleteMode.MoveToDeletedItems);
+                    //Console.WriteLine($"d\t{appointment.Start.ToShortDateString()} - {appointment.End.ToShortDateString()}");
+                });
+            });
 
-            Console.WriteLine("Saving new entries:");
-            // save new entries
-            foreach (var kvp in list)
+            await System.Threading.Tasks.Task.Run(() =>
             {
-                Appointment appointment = new Appointment(service);
-                appointment.Subject = $"AMS: {amsName}";
-                appointment.IsAllDayEvent = true;
-                appointment.Start = kvp.Key;
-                appointment.End = kvp.Value.AddDays(1);
-                appointment.LegacyFreeBusyStatus = LegacyFreeBusyStatus.Free;
-                appointment.IsReminderSet = false;
-                appointment.Categories.Add("AMS");
-                appointment.Save(SendInvitationsMode.SendToNone);
-                Console.WriteLine($"\t{appointment.Start.ToShortDateString()} - {appointment.End.ToShortDateString()}");
-            }
+                Console.WriteLine($"Saving {list.Count} new entries");
+                // save new entries
+                Parallel.ForEach(list, kvp =>
+                {
+                    Appointment appointment = new Appointment(service);
+                    appointment.Subject = $"AMS: {amsName}";
+                    appointment.IsAllDayEvent = true;
+                    appointment.Start = kvp.Key;
+                    appointment.End = kvp.Value.AddDays(1);
+                    appointment.LegacyFreeBusyStatus = LegacyFreeBusyStatus.Free;
+                    appointment.IsReminderSet = false;
+                    appointment.Categories.Add("AMS");
+                    appointment.Save(SendInvitationsMode.SendToNone);
+                    //Console.WriteLine($"s\t{appointment.Start.ToShortDateString()} - {appointment.End.ToShortDateString()}");
+                });
+            });
 
             Console.WriteLine("Finished");
-            Console.ReadKey(true);
 
             return await System.Threading.Tasks.Task.FromResult(0);
         }
