@@ -173,7 +173,7 @@ namespace OnCallOutlookEntry
         {
             var pass = new SecureString();
             ConsoleKeyInfo key;
-            // Stops Receving Keys Once Enter is Pressed
+            // Stops Receiving Keys Once Enter is Pressed
             while ((key = Console.ReadKey(true)).Key != ConsoleKey.Enter)
             {
                 // Backspace Should Not Work
@@ -204,7 +204,7 @@ namespace OnCallOutlookEntry
             Console.WriteLine($"Example:\n\t{exeName} \"C:\\oncall_plan_zharmas.xlsm\" \"Thomas Bandixen\" \"thomas.bandixen@trivadis.com\" \"******\"");
             Console.WriteLine("\t- The name is used to filter the entries");
             Console.WriteLine("\t- The email is used to create new appointments on the exchange server");
-            Console.WriteLine("\t- The password is used to authenticate against the exchange server (it wil NOT be logged or saved anywhere)");
+            Console.WriteLine("\t- The password is used to authenticate against the exchange server (it will NOT be logged or saved anywhere)");
             Console.WriteLine();
         }
     }
